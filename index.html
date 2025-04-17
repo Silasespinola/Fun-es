@@ -54,3 +54,182 @@ document.getElementById("formAgendamento").addEventListener("submit", function (
 
   document.getElementById("resultado").innerHTML = resultado;
 });
+
+
+
+
+  <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendamento Barbearia</title>
+  <style>
+    /* ===== CSS ===== */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #dfe9f3, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #34495e;
+    }
+
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #areaResultado {
+      margin-top: 40px;
+      background-color: #ecf9ff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #areaResultado h2 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    #resultado p {
+      margin: 6px 0;
+      font-size: 16px;
+      color: #2d3436;
+    }
+
+    #resultado p:first-child {
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HTML FORMULÁRIO ===== -->
+  <h1>Agendamento Barbearia</h1>
+
+  <form id="formAgendamento">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" required>
+
+    <label for="celular">Celular:</label>
+    <input type="tel" id="celular" required>
+
+    <label for="dia">Dia do Agendamento:</label>
+    <input type="date" id="dia" required>
+
+    <label for="horario">Horário:</label>
+    <input type="time" id="horario" required>
+
+    <label for="servico">Serviço:</label>
+    <select id="servico" required>
+      <option value="cabelo">Corte de Cabelo (R$ 40,00)</option>
+      <option value="cabelo_barba">Cabelo e Barba (R$ 60,00)</option>
+      <option value="barba">Barba (R$ 30,00)</option>
+    </select>
+
+    <!-- Opção do plano quinzenal -->
+    <label>
+      <input type="checkbox" id="planoQuinzenal">
+      Plano quinzenal (desconto aplicado)
+    </label>
+
+    <button type="submit">Agendar</button>
+  </form>
+
+  <!-- Resultado -->
+  <div id="areaResultado">
+    <h2>Último Agendamento</h2>
+    <div id="resultado"></div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    document.getElementById("formAgendamento").addEventListener("submit", function (event) {
+      event.preventDefault(); // Impede o envio do formulário
+
+      // Pega os dados preenchidos
+      const nome = document.getElementById("nome").value.trim();
+      const celular = document.getElementById("celular").value.trim();
+      const dia = document.getElementById("dia").value;
+      const horario = document.getElementById("horario").value;
+      const servico = document.getElementById("servico").value;
+      const planoQuinzenal = document.getElementById("planoQuinzenal").checked;
+
+      let preco = 0;
+
+      // Define o preço base conforme o serviço escolhido
+      if (servico === "cabelo") preco = 40;
+      else if (servico === "cabelo_barba") preco = 60;
+      else if (servico === "barba") preco = 30;
+
+      // Se o plano quinzenal estiver ativado, aplica desconto
+      if (planoQuinzenal) {
+        if (servico === "cabelo") preco *= 0.9; // 10% de desconto
+        else if (servico === "cabelo_barba") preco *= 0.85; // 15%
+        else if (servico === "barba") preco *= 0.95; // 5%
+      }
+
+      // Formata o valor para exibir com vírgula
+      preco = preco.toFixed(2).replace('.', ',');
+
+      // Monta a mensagem de confirmação
+      const resultado = `
+        <p><strong>Seu agendamento foi feito com sucesso!</strong></p>
+        <p><strong>Nome:</strong> ${nome}</p>
+        <p><strong>Celular:</strong> ${celular}</p>
+        <p><strong>Data:</strong> ${dia}</p>
+        <p><strong>Horário:</strong> ${horario}</p>
+        <p><strong>Serviço:</strong> ${document.querySelector("#servico option:checked").textContent}</p>
+        <p><strong>Plano quinzenal:</strong> ${planoQuinzenal ? "Sim" : "Não"}</p>
+        <p><strong>Valor final:</strong> R$ ${preco}</p>
+      `;
+
+      // Exibe o resultado na tela
+      document.getElementById("resultado").innerHTML = resultado;
+    });
+  </script>
+</body>
+</html>
