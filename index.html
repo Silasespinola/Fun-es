@@ -1,0 +1,56 @@
+🧩 HTML (trecho novo para colocar no formulário)
+Adicione isto no meio do seu <form>:
+
+html
+Copiar
+Editar
+<!-- Checkbox do plano quinzenal -->
+<label>
+  <input type="checkbox" id="planoQuinzenal">
+  Plano quinzenal (desconto aplicado)
+</label>
+⚙️ JavaScript atualizado com cálculo de desconto
+Aqui está o novo JavaScript com o plano quinzenal incluído e funcionando:
+
+javascript
+Copiar
+Editar
+document.getElementById("formAgendamento").addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const nome = document.getElementById("nome").value.trim();
+  const celular = document.getElementById("celular").value.trim();
+  const dia = document.getElementById("dia").value;
+  const horario = document.getElementById("horario").value;
+  const servico = document.getElementById("servico").value;
+  const planoQuinzenal = document.getElementById("planoQuinzenal").checked;
+
+  let preco = 0;
+
+  // Preços base
+  if (servico === "cabelo") preco = 40;
+  else if (servico === "cabelo_barba") preco = 60;
+  else if (servico === "barba") preco = 30;
+
+  // Aplicar desconto se o plano quinzenal estiver marcado
+  if (planoQuinzenal) {
+    if (servico === "cabelo") preco *= 0.9;           // 10% de desconto
+    else if (servico === "cabelo_barba") preco *= 0.85; // 15%
+    else if (servico === "barba") preco *= 0.95;        // 5%
+  }
+
+  preco = preco.toFixed(2).replace('.', ',');
+
+  const resultado = `
+    <p><strong>Seu agendamento foi feito com sucesso!</strong></p>
+    <p><strong>Nome:</strong> ${nome}</p>
+    <p><strong>Celular:</strong> ${celular}</p>
+    <p><strong>Data:</strong> ${dia}</p>
+    <p><strong>Horário:</strong> ${horario}</p>
+    <p><strong>Serviço:</strong> ${document.querySelector("#servico option:checked").textContent}</p>
+    <p><strong>Plano quinzenal:</strong> ${planoQuinzenal ? "Sim" : "Não"}</p>
+    <p><strong>Valor final:</strong> R$ ${preco}</p>
+  `;
+
+  document.getElementById("resultado").innerHTML = resultado;
+});
